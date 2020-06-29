@@ -22,7 +22,7 @@ public class MinesweeperGame extends JFrame {
 	JMenuItem newGame, restartGame, randomCheck, easy, medium, hard, insane, timerOn, timerOff, audioOn, audioOff;
 	
 	public MinesweeperGame() {
-        initUI();
+        
         menuBar = new JMenuBar();
 		difficulty = new JMenu("Difficulty");
 		settings = new JMenu("Settings");
@@ -59,6 +59,7 @@ public class MinesweeperGame extends JFrame {
 		game.add(newGame);
 		game.add(restartGame);
 		game.add(randomCheck);
+		initUI();
     }
 	
 	private void initUI() {
