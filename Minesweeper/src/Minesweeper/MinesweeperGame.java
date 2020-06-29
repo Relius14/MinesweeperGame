@@ -17,9 +17,48 @@ import javax.swing.JMenuItem;
 public class MinesweeperGame extends JFrame {
 	
 	private JLabel statusbar, timebar;
+	JMenuBar menuBar;
+	JMenu difficulty, settings, game, timer, audio;
+	JMenuItem newGame, restartGame, randomCheck, easy, medium, hard, insane, timerOn, timerOff, audioOn, audioOff;
 	
 	public MinesweeperGame() {
         initUI();
+        menuBar = new JMenuBar();
+		difficulty = new JMenu("Difficulty");
+		settings = new JMenu("Settings");
+		game = new JMenu("Game");
+		newGame = new JMenuItem("New Game");
+		restartGame = new JMenuItem("Restart Game");
+		randomCheck = new JMenuItem("Random Check");
+		easy = new JMenuItem("Easy");
+		medium = new JMenuItem("Medium");
+		hard = new JMenuItem("Hard");
+		insane = new JMenuItem("Insane");
+		timer = new JMenu("Timer");
+		audio = new JMenu("Audio");
+		audioOn = new JMenuItem("Audio: On");
+		audioOff = new JMenuItem("Audio: Off");
+		timerOn = new JMenuItem("Timer: On");
+		timerOff = new JMenuItem("Timer: Off");
+		
+		menuBar.add(difficulty);
+		difficulty.add(easy);
+		difficulty.add(medium);
+		difficulty.add(hard);
+		difficulty.add(insane);
+		
+		menuBar.add(settings);
+		settings.add(timer);
+		timer.add(timerOn);
+		timer.add(timerOff);
+		settings.add(audio);
+		audio.add(audioOn);
+		audio.add(audioOff);
+		
+		menuBar.add(game);
+		game.add(newGame);
+		game.add(restartGame);
+		game.add(randomCheck);
     }
 	
 	private void initUI() {
@@ -33,6 +72,7 @@ public class MinesweeperGame extends JFrame {
 		
 		setResizable(false);
 		pack();
+		setJMenuBar(menuBar);
 		setTitle("Minesweeper");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
