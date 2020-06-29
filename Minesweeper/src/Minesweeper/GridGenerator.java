@@ -20,18 +20,18 @@ public class GridGenerator extends JPanel{
 	private final int IMAGE_SIZE = 24;
 	private final int NO_IMAGES = 13;
 	private Image img[];
-	private final JLabel statusbar, timerbar;
-	protected int height, lenght, noMines, minesLeft, i;
+	private final JLabel statusbar;
+	protected int height, lenght, noMines, minesLeft;
 	protected Tile[][] matrix;
 	private Boolean inGame, won;
 	private Timer time;
 	
-	public GridGenerator(int height, int lenght, int noMines, JLabel statusbar, JLabel timer){
+	public GridGenerator(int height, int lenght, int noMines, JLabel statusbar, Timer timer){
 		this.statusbar = statusbar;
 		this.height = height;
 		this.lenght = lenght;
 		this.noMines = noMines;
-		this.timerbar = timer;
+		this.time = timer;
 		matrix = new Tile[height][lenght];
 		
 		InitGrid();
@@ -45,22 +45,14 @@ public class GridGenerator extends JPanel{
             img[i] = (new ImageIcon(path)).getImage();
         }
 		
-		time = new Timer(1000, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				timerbar.setText(Integer.toString(i / 60)+ " : "+ Integer.toString(i % 60));
-				++i;
-			}
-		});
-		
 		addMouseListener(new MinesAdapter());
 		generateMines();
 	}
 	
-	private void generateMines(){
+	public void generateMines(){
 		inGame = true;
 		won = false;
-		minesLeft = i = 0;
+		minesLeft = 0;
 		
 		statusbar.setText("Flags left: " + Integer.toString(noMines));
 		for(int row = 0; row < height; ++row)
@@ -79,8 +71,6 @@ public class GridGenerator extends JPanel{
 				++minesLeft;
 			}
 		}
-		time.restart();
-		
 	}
 	
 	public void addNeighbors(int row, int col){
@@ -110,7 +100,7 @@ public class GridGenerator extends JPanel{
 	}
 	
 	public void paintComponent(Graphics g) {
-		int uncover = 0;
+		int toUncover = 0;
 		
 		for(int row = 0; row < height; ++row) {
 			for(int col = 0; col < lenght; ++col) {
@@ -122,12 +112,12 @@ public class GridGenerator extends JPanel{
 						matrix[row][col].reveal();
 				}
 				if (!matrix[row][col].isRevealed()) {
-					++uncover;
+					++toUncover;
 	            }
 				g.drawImage(img[matrix[row][col].getType()], col * IMAGE_SIZE, row * IMAGE_SIZE, this);
 			}
 		}
-		if (inGame && uncover == noMines) {
+		if (inGame && toUncover == noMines) {
             inGame = false;
             won = true;
             statusbar.setText("YOU WON!");
@@ -182,10 +172,6 @@ public class GridGenerator extends JPanel{
 					repaint();
 				}
 			}
-			else if (!inGame) {
-                generateMines();
-                repaint();
-            }
 		}
 	}
 }
