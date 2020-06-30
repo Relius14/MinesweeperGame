@@ -41,6 +41,10 @@ public class Tile extends JButton{
 		if(!mine)
 			++tileType;
 	}
+	public void resetType() {
+		if(!mine)
+			tileType = 0;
+	}
 	public int getType() {
 		if((flag && !revealed) || (flag && revealed && mine))
 			return 11;			//right flag mark

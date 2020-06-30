@@ -40,6 +40,8 @@ public class MinesweeperGame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				timebar.setText(Integer.toString(i / 60)+ " : "+ Integer.toString(i % 60));
 				++i;
+				if(i % 60 == 0 && i != 0)
+					gameType.shuffle();
 			}
 		});
         gameType = new GridGenerator(8,8,10,statusbar,time);
@@ -94,6 +96,7 @@ public class MinesweeperGame extends JFrame {
 			game.add(restartGame);
 			game.add(randomCheck);
 			newGame.addActionListener(new anotherGame());
+			randomCheck.addActionListener(new randomReveal());
 	}
 	private void resetGameType() {
 		remove(gameType);
@@ -118,7 +121,11 @@ public class MinesweeperGame extends JFrame {
 			initUI();
 		}
 	}
-	
+	class randomReveal implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			gameType.randomCheck();
+		}
+	}
 	class mediumGame implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			resetGameType();

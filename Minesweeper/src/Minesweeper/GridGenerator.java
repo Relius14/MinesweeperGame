@@ -23,8 +23,9 @@ public class GridGenerator extends JPanel{
 	private final JLabel statusbar;
 	protected int height, lenght, noMines, minesLeft;
 	protected Tile[][] matrix;
-	private Boolean inGame, won;
+	private Boolean inGame, won, insane;
 	private Timer time;
+	private int radarsLeft;
 	
 	public GridGenerator(int height, int lenght, int noMines, JLabel statusbar, Timer timer){
 		this.statusbar = statusbar;
@@ -32,8 +33,9 @@ public class GridGenerator extends JPanel{
 		this.lenght = lenght;
 		this.noMines = noMines;
 		this.time = timer;
+		this.radarsLeft = 3;
 		matrix = new Tile[height][lenght];
-		
+		insane = true;
 		InitGrid();
 	}
 	
@@ -53,7 +55,7 @@ public class GridGenerator extends JPanel{
 		inGame = true;
 		won = false;
 		minesLeft = 0;
-		
+		radarsLeft = 3;
 		statusbar.setText("Flags left: " + Integer.toString(noMines));
 		for(int row = 0; row < height; ++row)
 			for(int col = 0; col < lenght; ++col)
@@ -72,14 +74,52 @@ public class GridGenerator extends JPanel{
 			}
 		}
 	}
-	
+	public void randomCheck() {
+		int col, row;
+		Random rand = new Random();
+		do {
+			row = rand.nextInt(height);
+			col = rand.nextInt(lenght);
+		}while(matrix[row][col].isRevealed());
+		
+		matrix[row][col].reveal();
+		if(matrix[row][col].isMine()) {
+			inGame = false;
+		}
+		if(matrix[row][col].getType() == 0) 
+			 findEmptyCell(row, col);
+		repaint();
+	}
 	public void addNeighbors(int row, int col){
 		for(int i = -1; i < 2; ++i)
 			for(int j = -1; j < 2; ++j)
 				if(row + i >= 0 && col + j >= 0 && row + i < height && col + j < lenght)
 					matrix[row + i][col + j].increaseType();
 	}
-	
+	public void shuffle() {
+		int row1, row2, col1, col2;
+		Tile aux = new Tile();
+		Random rand = new Random();
+		for(int i = 0; i < lenght; ++i)
+			for(int j = 0; j < height; ++j) {
+				matrix[i][j].resetType();
+			}
+		for(int i = 0; i< lenght*height; ++i) {
+			row1 = rand.nextInt(height);
+			col1 = rand.nextInt(lenght);
+			row2 = rand.nextInt(height);
+			col2 = rand.nextInt(lenght);
+			aux = matrix[row1][col1];
+			matrix[row1][col1] = matrix[row2][col2];
+			matrix[row2][col2] = aux;
+		}
+		for(int i = 0; i < lenght; ++i)
+			for(int j = 0; j < height; ++j) {
+				if(matrix[i][j].isMine())
+					addNeighbors(i,j);
+			}
+		repaint();
+	}
 	private void findEmptyCell(int row, int col) {
 		for(int i = -1; i < 2; ++i) {
 			for(int j = -1; j < 2; ++j) {
@@ -167,6 +207,24 @@ public class GridGenerator extends JPanel{
 					if(matrix[row][col].getType() == 0) {
 						 findEmptyCell(row, col);
 					}
+				} else if(e.getButton() == MouseEvent.BUTTON2) {
+					if(radarsLeft > 0) {
+						toRepaint = true;
+						for(int i = -1; i < 2; ++i)
+							for(int j = -1; j < 2; ++j)
+								if(row + i >= 0 && col + j >= 0 && row + i < height && col + j < lenght)
+									if(!matrix[row + i][col + j].isRevealed() && matrix[row + i][col + j].isMine() && !matrix[row + i][col + j].isFlag())
+										matrix[row + i][col + j].setFlag();
+									else
+										if(!matrix[row + i][col + j].isMine())
+											 matrix[row + i][col + j].reveal();
+						--radarsLeft;
+						statusbar.setText("Radars left: " + Integer.toString(radarsLeft));
+					}
+					else {
+						  statusbar.setText("No radars left!");
+					}
+						
 				}
 				if(toRepaint) {
 					repaint();
