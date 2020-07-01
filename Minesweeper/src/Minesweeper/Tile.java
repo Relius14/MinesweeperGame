@@ -31,7 +31,7 @@ public class Tile extends JButton{
 	}
 	
 	public void reveal() {
-		revealed = true;
+		revealed = !revealed;
 	}
 	public Boolean isRevealed(){
 		return revealed;

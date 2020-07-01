@@ -80,7 +80,7 @@ public class GridGenerator extends JPanel{
 		do {
 			row = rand.nextInt(height);
 			col = rand.nextInt(lenght);
-		}while(matrix[row][col].isRevealed());
+		}while(matrix[row][col].isRevealed() || matrix[row][col].isFlag());
 		
 		matrix[row][col].reveal();
 		if(matrix[row][col].isMine()) {
@@ -100,8 +100,8 @@ public class GridGenerator extends JPanel{
 		int row1, row2, col1, col2;
 		Tile aux = new Tile();
 		Random rand = new Random();
-		for(int i = 0; i < lenght; ++i)
-			for(int j = 0; j < height; ++j) {
+		for(int i = 0; i < height; ++i)
+			for(int j = 0; j < lenght; ++j) {
 				matrix[i][j].resetType();
 			}
 		for(int i = 0; i< lenght*height; ++i) {
@@ -113,10 +113,28 @@ public class GridGenerator extends JPanel{
 			matrix[row1][col1] = matrix[row2][col2];
 			matrix[row2][col2] = aux;
 		}
-		for(int i = 0; i < lenght; ++i)
-			for(int j = 0; j < height; ++j) {
+		for(int i = 0; i < height; ++i)
+			for(int j = 0; j < lenght; ++j) {
 				if(matrix[i][j].isMine())
 					addNeighbors(i,j);
+			}
+		for(int row = 0; row < height; ++row)
+			for(int col = 0; col < lenght; ++col) {
+				if(matrix[row][col].isRevealed()){
+					if(matrix[row][col].getType()==0)
+						findEmptyCell(row,col);
+					else {
+						Boolean ok = true;
+						for(int i = -1; i < 2; ++i)
+							for(int j = -1; j < 2; ++j)
+								if(row + i >= 0 && col + j >= 0 && row + i < height && col + j < lenght)
+									if(matrix[row + i][col + j].getType() == 0) {
+										ok = false;
+									}
+						if(ok)
+							matrix[row][col].reveal();
+					}
+				}
 			}
 		repaint();
 	}
@@ -148,7 +166,7 @@ public class GridGenerator extends JPanel{
 	                   inGame = false;
 	            }
 				if (!inGame) {
-					if(matrix[row][col].isMine() ||  matrix[row][col].isFlag())
+					if((matrix[row][col].isMine() ||  matrix[row][col].isFlag())&& !matrix[row][col].isRevealed())
 						matrix[row][col].reveal();
 				}
 				if (!matrix[row][col].isRevealed()) {
@@ -210,14 +228,20 @@ public class GridGenerator extends JPanel{
 				} else if(e.getButton() == MouseEvent.BUTTON2) {
 					if(radarsLeft > 0) {
 						toRepaint = true;
-						for(int i = -1; i < 2; ++i)
-							for(int j = -1; j < 2; ++j)
-								if(row + i >= 0 && col + j >= 0 && row + i < height && col + j < lenght)
-									if(!matrix[row + i][col + j].isRevealed() && matrix[row + i][col + j].isMine() && !matrix[row + i][col + j].isFlag())
-										matrix[row + i][col + j].setFlag();
-									else
-										if(!matrix[row + i][col + j].isMine())
-											 matrix[row + i][col + j].reveal();
+						if(matrix[row][col].isMine())
+							matrix[row][col].setFlag();
+						else {
+							for(int i = -1; i < 2; ++i)
+								for(int j = -1; j < 2; ++j)
+									if(row + i >= 0 && col + j >= 0 && row + i < height && col + j < lenght)
+										if(!matrix[row + i][col + j].isRevealed() && matrix[row + i][col + j].isMine() && !matrix[row + i][col + j].isFlag()) {
+											matrix[row + i][col + j].setFlag();
+											--minesLeft;
+										}
+										else
+											if(!matrix[row + i][col + j].isMine() && !matrix[row + i][col + j].isRevealed())
+												 matrix[row + i][col + j].reveal();
+						}
 						--radarsLeft;
 						statusbar.setText("Radars left: " + Integer.toString(radarsLeft));
 					}

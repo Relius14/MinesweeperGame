@@ -22,25 +22,26 @@ public class MinesweeperGame extends JFrame {
 	private JLabel statusbar, timebar;
 	private int i;
 	private Timer time;
+	private Boolean insaneMode;
 	JMenuBar menuBar;
-	JMenu difficulty, settings, game, timer, audio;
-	JMenuItem newGame, restartGame, randomCheck, easy, medium, hard, insane, timerOn, timerOff, audioOn, audioOff;
+	JMenu difficulty, settings, game;
+	JMenuItem newGame, randomCheck, easy, medium, hard, insane, timerToggle, audioToggle, audioOff;
 	private GridGenerator gameType;
 	public MinesweeperGame() {
         
 		setMenuBar();
 		statusbar = new JLabel("");
-		timebar = new JLabel("0 : 0");
-		
+		timebar = new JLabel();
+		insaneMode = false;
 		add(statusbar, BorderLayout.AFTER_LAST_LINE);
         add(timebar,BorderLayout.NORTH);
         
         time = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				timebar.setText(Integer.toString(i / 60)+ " : "+ Integer.toString(i % 60));
+				timebar.setText("Time: " + Integer.toString(i / 60)+ " : "+ Integer.toString(i % 60));
 				++i;
-				if(i % 60 == 0 && i != 0)
+				if(i % 60 == 0 && i != 0 && insaneMode)
 					gameType.shuffle();
 			}
 		});
@@ -68,32 +69,24 @@ public class MinesweeperGame extends JFrame {
 			easy.addActionListener(new easyGame());
 			medium.addActionListener(new mediumGame());
 			hard.addActionListener(new hardGame());
-			
+			insane.addActionListener(new insaneGame());
 			settings = new JMenu("Settings");
 			menuBar.add(settings);
 			
-			timer = new JMenu("Timer");
-			settings.add(timer);
-			timerOn = new JMenuItem("Timer: On");
-			timerOff = new JMenuItem("Timer: Off");
-			timer.add(timerOn);
-			timer.add(timerOff);
+			timerToggle = new JMenuItem("Timer Toggle");
+			settings.add(timerToggle);
+			timerToggle.addActionListener(new TimerToggle());
 			
-			audio = new JMenu("Audio");
-			settings.add(audio);
-			audioOn = new JMenuItem("Audio: On");
-			audioOff = new JMenuItem("Audio: Off");
-			audio.add(audioOn);
-			audio.add(audioOff);
+			audioToggle = new JMenuItem("Audio Toggle");
+			settings.add(audioToggle);
+
 			
 			game = new JMenu("Game");
 			menuBar.add(game);
 			
 			newGame = new JMenuItem("New Game");
-			restartGame = new JMenuItem("Restart Game");
 			randomCheck = new JMenuItem("Random Check");
 			game.add(newGame);
-			game.add(restartGame);
 			game.add(randomCheck);
 			newGame.addActionListener(new anotherGame());
 			randomCheck.addActionListener(new randomReveal());
@@ -105,7 +98,7 @@ public class MinesweeperGame extends JFrame {
 	private void initUI() {
 		
 		setResizable(true);
-		timebar.setText("0 : 0");
+		timebar.setText("Time: 0 : 0");
 		i = 1;
 		time.restart();
 		add(gameType);
@@ -114,10 +107,19 @@ public class MinesweeperGame extends JFrame {
 		setResizable(false);
 		
 	}
+	class TimerToggle implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			timebar.setVisible(!timebar.isVisible());
+		}
+		
+	}
 	class easyGame implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			resetGameType();
 			gameType = new GridGenerator(8,8,10,statusbar,time);
+			insaneMode = false;
 			initUI();
 		}
 	}
@@ -130,6 +132,7 @@ public class MinesweeperGame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			resetGameType();
 			gameType = new GridGenerator(12,12,20,statusbar,time);
+			insaneMode = false;
 			initUI();
 		}
 	}
@@ -138,6 +141,15 @@ public class MinesweeperGame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			resetGameType();
 			gameType = new GridGenerator(25,25,100,statusbar,time);
+			insaneMode = false;
+			initUI();
+		}
+	}
+	class insaneGame implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			resetGameType();
+			gameType = new GridGenerator(30,30,100,statusbar,time);
+			insaneMode = true;
 			initUI();
 		}
 	}
