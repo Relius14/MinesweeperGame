@@ -1,5 +1,7 @@
 package Minesweeper;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -8,13 +10,17 @@ import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class GameFeatures extends GridGenerator{
-
-	public GameFeatures(int gridSize, int noMines, JLabel statusbar, TimeManager timer) {
-		super(gridSize, noMines, statusbar, timer);
+	JLabel radarBar;
+	public GameFeatures(int gridSize, int noMines, JLabel statusBar, TimeManager timer, JLabel radarBar) {
+		super(gridSize, noMines, statusBar, timer);
+		this.radarBar = radarBar;
 		addMouseListener(new MinesAdapter());
 	}
 	public void randomCheck() {
 		int col, row;
+		if(!inGame) {
+			return;
+		}
 		Random rand = new Random();
 		do {
 			row = rand.nextInt(gridSize);
@@ -24,6 +30,7 @@ public class GameFeatures extends GridGenerator{
 		matrix[row][col].reveal();
 		if(matrix[row][col].isMine()) {
 			inGame = false;
+			time.stopTime();
 		}
 		
 		if(matrix[row][col].getType() == 0) {
@@ -72,16 +79,16 @@ public class GameFeatures extends GridGenerator{
 			++minesLeft;
 			matrix[row][col].setFlag();
 			String msg = Integer.toString(minesLeft);
-            statusbar.setText("Flags left: " + msg);
+            statusBar.setText("Flags left: " + msg);
 		}
 		else
 			if(minesLeft > 0) {
 				--minesLeft;
 				matrix[row][col].setFlag();
 				String msg = Integer.toString(minesLeft);
-                statusbar.setText("Flags left: " + msg);
+                statusBar.setText("Flags left: " + msg);
 			} else {
-				statusbar.setText("No flags left!");
+				statusBar.setText("No flags left!");
 			}
 	}
 	private void toReveal(int row, int col) {
@@ -117,7 +124,7 @@ public class GameFeatures extends GridGenerator{
 			}
 		}
 		--radarsLeft;
-		statusbar.setText("Radars left: " + Integer.toString(radarsLeft));
+		radarBar.setText("Radars left: " + Integer.toString(radarsLeft));
 	}
 	
 	public class MinesAdapter extends MouseAdapter{
@@ -143,7 +150,7 @@ public class GameFeatures extends GridGenerator{
 								toSearch(row,col);
 							}
 							else {
-								statusbar.setText("No radars left!");
+								radarBar.setText("No radars left!");
 							}
 						}
 					}
@@ -152,5 +159,14 @@ public class GameFeatures extends GridGenerator{
 				}
 			}
 		}
+	}
+}
+class RandomReveal implements ActionListener{
+	MinesweeperGame game;
+	RandomReveal(MinesweeperGame game){
+		this.game = game;
+	}
+	public void actionPerformed(ActionEvent e) {
+		game.getGameType().randomCheck();
 	}
 }

@@ -14,15 +14,15 @@ public class GridGenerator extends JPanel{
 	protected final int IMAGE_SIZE = 24;
 	protected final int NO_IMAGES = 13;
 	private Image img[];
-	protected final JLabel statusbar;
+	protected final JLabel statusBar;
 	protected int gridSize;
 	protected int noMines, minesLeft, radarsLeft;
 	protected Tile[][] matrix;
 	protected Boolean inGame, won;
 	protected TimeManager time;
 	
-	public GridGenerator(int gridSize, int noMines, JLabel statusbar, TimeManager timer){
-		this.statusbar = statusbar;
+	public GridGenerator(int gridSize, int noMines, JLabel statusBar, TimeManager timer){
+		this.statusBar = statusBar;
 		this.gridSize = gridSize;
 		this.noMines = noMines;
 		this.time = timer;
@@ -45,7 +45,7 @@ public class GridGenerator extends JPanel{
 		won = false;
 		minesLeft = 0;
 		radarsLeft = 3;
-		statusbar.setText("Flags left: " + Integer.toString(noMines));
+		statusBar.setText("Flags left: " + Integer.toString(noMines));
 		int col, row;
 		for(row = 0; row < gridSize; ++row)
 			for(col = 0; col < gridSize; ++col)
@@ -86,7 +86,7 @@ public class GridGenerator extends JPanel{
 						matrix[row + i][col + j].setFlag();
 						++minesLeft;
 						String msg = Integer.toString(minesLeft);
-                        statusbar.setText(msg);
+                        statusBar.setText(msg);
 					}
 					if(matrix[row + i][col + j].getType() == 0) {
 						findEmptyCell(row + i, col + j);
@@ -117,11 +117,11 @@ public class GridGenerator extends JPanel{
 		if (inGame && toUncover == noMines) {
             inGame = false;
             won = true;
-            statusbar.setText("YOU WON!");
+            statusBar.setText("YOU WON!");
             time.stopTime();
         }
 		else if (!inGame && !won) {
-            statusbar.setText("YOU LOST!");
+            statusBar.setText("YOU LOST!");
         }
 	}
 }
