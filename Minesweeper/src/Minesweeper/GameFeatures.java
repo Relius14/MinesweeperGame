@@ -10,10 +10,8 @@ import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class GameFeatures extends GridGenerator{
-	JLabel radarBar;
-	public GameFeatures(int gridSize, int noMines, JLabel statusBar, TimeManager timer, JLabel radarBar) {
-		super(gridSize, noMines, statusBar, timer);
-		this.radarBar = radarBar;
+	public GameFeatures(int gridSize, int noMines, JLabel statusBar, TimeManager time, JLabel radarBar, AudioManager audio) {
+		super(gridSize, noMines, statusBar, radarBar, time, audio);
 		addMouseListener(new MinesAdapter());
 	}
 	public void randomCheck() {
@@ -30,16 +28,19 @@ public class GameFeatures extends GridGenerator{
 		matrix[row][col].reveal();
 		if(matrix[row][col].isMine()) {
 			inGame = false;
+			audio.playBomb();
 			time.stopTime();
 		}
 		
 		if(matrix[row][col].getType() == 0) {
-			 findEmptyCell(row, col);
+			audio.playReveal();
+			findEmptyCell(row, col);
 		}
 		repaint();
 	}
 	
 	public void shuffle() {
+		audio.playShuffle();
 		int row1, row2, col1, col2;
 		Tile aux = new Tile();
 		Random rand = new Random();
@@ -80,6 +81,7 @@ public class GameFeatures extends GridGenerator{
 			matrix[row][col].setFlag();
 			String msg = Integer.toString(minesLeft);
             statusBar.setText("Flags left: " + msg);
+            audio.playMark();
 		}
 		else
 			if(minesLeft > 0) {
@@ -87,6 +89,7 @@ public class GameFeatures extends GridGenerator{
 				matrix[row][col].setFlag();
 				String msg = Integer.toString(minesLeft);
                 statusBar.setText("Flags left: " + msg);
+                audio.playMark();
 			} else {
 				statusBar.setText("No flags left!");
 			}
@@ -95,14 +98,18 @@ public class GameFeatures extends GridGenerator{
 		matrix[row][col].reveal();
 		if(matrix[row][col].isMine()) {
 			inGame = false;
+			audio.playBomb();
 			time.stopTime();
+			return;
 		}
+		audio.playReveal();
 		if(matrix[row][col].getType() == 0) {
 			 findEmptyCell(row, col);
 		}
 	}
 	
 	private void toSearch(int row, int col) {
+		audio.playSonar();
 		if(matrix[row][col].isMine()) {
 			matrix[row][col].setFlag();
 		}
@@ -123,6 +130,7 @@ public class GameFeatures extends GridGenerator{
 				}
 			}
 		}
+        statusBar.setText("Flags left: " + Integer.toString(minesLeft));
 		--radarsLeft;
 		radarBar.setText("Radars left: " + Integer.toString(radarsLeft));
 	}
@@ -167,6 +175,9 @@ class RandomReveal implements ActionListener{
 		this.game = game;
 	}
 	public void actionPerformed(ActionEvent e) {
-		game.getGameType().randomCheck();
+		if(game.getGameType().inGame) {
+			game.audioButtons();
+			game.getGameType().randomCheck();
+		}
 	}
 }

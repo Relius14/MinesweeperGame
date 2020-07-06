@@ -20,6 +20,7 @@ public class MinesweeperGame extends JFrame {
 	private JLabel statusBar, timeBar, radarBar;
 	private JPanel labelPanel, gamePanel, buttonsPanel;
 	private TimeManager timeManager;
+	private AudioManager audioManager;
 	private JButton button;
 	private JMenuBar menuBar;
 	private JMenu difficulty;
@@ -40,8 +41,9 @@ public class MinesweeperGame extends JFrame {
     }
 	
 	private void setGamePanel() {
-		timeManager = new TimeManager(timeBar);
-		gameType = new GameFeatures(10,15,statusBar,timeManager, radarBar);
+		audioManager = new AudioManager();
+		timeManager = new TimeManager(timeBar, audioManager);
+		gameType = new GameFeatures(10,15,statusBar,timeManager, radarBar, audioManager);
 		timeManager.setGame(gameType);
 		
 		gamePanel = new JPanel(new BorderLayout());
@@ -58,7 +60,7 @@ public class MinesweeperGame extends JFrame {
 		c.gridx = 0;
 		c.gridy = 0;
 		button = new JButton("Audio");
-		//button.addActionListener(new SameGame(this));
+		button.addActionListener(new ToggleAudio(this));
 		buttonsPanel.add(button, c);
 		
 		c.fill = GridBagConstraints.PAGE_START;
@@ -119,14 +121,19 @@ public class MinesweeperGame extends JFrame {
 			difficulty.add(insane);
 	}
 	
-	public GameFeatures getGameType() {
+	protected GameFeatures getGameType() {
 		return gameType;
 	}
-	
-	public void resetGameType(GameType newType) {
+	protected void toggleAudio() {
+		audioManager.setAudio();
+	}
+	protected void audioButtons() {
+		audioManager.playButton();
+	}
+	protected void resetGameType(GameType newType) {
 		setResizable(true);
 		remove(gameType);
-		gameType = new GameFeatures(newType.getSize(), newType.getMines(), statusBar, timeManager, radarBar);
+		gameType = new GameFeatures(newType.getSize(), newType.getMines(), statusBar, timeManager, radarBar, audioManager);
 		add(gameType);
 		timeManager.setGame(gameType);
 		timeManager.setInsane(newType.getInsane());
@@ -144,4 +151,6 @@ public class MinesweeperGame extends JFrame {
             ex.setVisible(true);
         });
     }
+
+	
 }

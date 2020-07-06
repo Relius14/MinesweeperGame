@@ -9,20 +9,24 @@ import javax.swing.Timer;
 public class TimeManager {
 	private JLabel timebar;
 	private Timer time;
+	private AudioManager audioManager;
 	private GameFeatures game;
 	private Boolean insane = false;
 	private int i;
-	TimeManager(JLabel timebar){
+	TimeManager(JLabel timebar, AudioManager audioManager){
 		i = 0;
 		this.timebar = timebar;
+		this.audioManager = audioManager;
 		timebar.setText("Time: 0 : 0");
 		time = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timebar.setText("Time: " + Integer.toString(i / 60)+ " : "+ Integer.toString(i % 60));
 				++i;
-				if(i % 61 == 0 && i != 0 && insane)
+				if(i % 60 == 1 && i != 1 && insane)
 					game.shuffle();
+				if(i % 60 == 56)
+					audioManager.playTick();
 			}
 		});
 	}

@@ -14,18 +14,20 @@ public class GridGenerator extends JPanel{
 	protected final int IMAGE_SIZE = 24;
 	protected final int NO_IMAGES = 13;
 	private Image img[];
-	protected final JLabel statusBar;
-	protected int gridSize;
-	protected int noMines, minesLeft, radarsLeft;
+	protected final JLabel statusBar, radarBar;
+	protected int gridSize, noMines, minesLeft, radarsLeft;
 	protected Tile[][] matrix;
 	protected Boolean inGame, won;
 	protected TimeManager time;
+	protected AudioManager audio;
 	
-	public GridGenerator(int gridSize, int noMines, JLabel statusBar, TimeManager timer){
+	public GridGenerator(int gridSize, int noMines, JLabel statusBar, JLabel radarBar, TimeManager time, AudioManager audioManager){
 		this.statusBar = statusBar;
+		this.radarBar = radarBar;
 		this.gridSize = gridSize;
 		this.noMines = noMines;
-		this.time = timer;
+		this.time = time;
+		this.audio = audioManager;
 		matrix = new Tile[gridSize][gridSize];
 		InitUI();
 		generateMines();
@@ -45,6 +47,7 @@ public class GridGenerator extends JPanel{
 		won = false;
 		minesLeft = 0;
 		radarsLeft = 3;
+		radarBar.setText("Radars left: 3");
 		statusBar.setText("Flags left: " + Integer.toString(noMines));
 		int col, row;
 		for(row = 0; row < gridSize; ++row)
@@ -119,6 +122,7 @@ public class GridGenerator extends JPanel{
             won = true;
             statusBar.setText("YOU WON!");
             time.stopTime();
+            audio.playWin();
         }
 		else if (!inGame && !won) {
             statusBar.setText("YOU LOST!");

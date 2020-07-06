@@ -28,6 +28,7 @@ class EasyGame implements ActionListener{
 		minesweeperGame = m;
 	}
 	public void actionPerformed(ActionEvent e) {
+		minesweeperGame.audioButtons();
 		minesweeperGame.resetGameType(new GameType(10,15, false));
 	}
 }
@@ -37,6 +38,7 @@ class MediumGame implements ActionListener{
 		minesweeperGame = m;
 	}
 	public void actionPerformed(ActionEvent e) {
+		minesweeperGame.audioButtons();
 		minesweeperGame.resetGameType(new GameType(15,40, false));
 	}
 }
@@ -46,6 +48,7 @@ class HardGame implements ActionListener{
 		minesweeperGame = m;
 	}
 	public void actionPerformed(ActionEvent e) {
+		minesweeperGame.audioButtons();
 		minesweeperGame.resetGameType(new GameType(20,80, false));
 	}
 }
@@ -55,7 +58,8 @@ class InsaneGame implements ActionListener{
 		minesweeperGame = m;
 	}
 	public void actionPerformed(ActionEvent e) {
-		minesweeperGame.resetGameType(new GameType(25,150, true));
+		minesweeperGame.audioButtons();
+		minesweeperGame.resetGameType(new GameType(25,200, true));
 	}
 }
 class SameGame implements ActionListener{
@@ -64,6 +68,7 @@ class SameGame implements ActionListener{
 		minesweeperGame = m;
 	}
 	public void actionPerformed(ActionEvent e) {
+		minesweeperGame.audioButtons();
 		minesweeperGame.getGameType().generateMines();
 	}
 }
