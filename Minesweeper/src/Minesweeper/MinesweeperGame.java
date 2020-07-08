@@ -1,10 +1,10 @@
 package Minesweeper;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,6 +13,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 @SuppressWarnings("serial")
 public class MinesweeperGame extends JFrame {
@@ -28,6 +30,19 @@ public class MinesweeperGame extends JFrame {
 	private GameFeatures gameType;
 	
 	public MinesweeperGame() {
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+		
 		setTitle("Minesweeper");
 		setLabelPanel();
 		setGamePanel();
@@ -61,6 +76,8 @@ public class MinesweeperGame extends JFrame {
 		c.gridy = 0;
 		button = new JButton("Audio");
 		button.addActionListener(new ToggleAudio(this));
+		button.setBackground(Color.GREEN);
+		button.setFont(new Font("Verdana", Font.PLAIN, 12));
 		buttonsPanel.add(button, c);
 		
 		c.fill = GridBagConstraints.PAGE_START;
@@ -69,6 +86,8 @@ public class MinesweeperGame extends JFrame {
 		c.gridy = 0;
 		button = new JButton("New Game");
 		button.addActionListener(new SameGame(this));
+		button.setBackground(Color.YELLOW);
+		button.setFont(new Font("Verdana", Font.PLAIN, 12));
 		buttonsPanel.add(button, c);
 		
 		c.fill = GridBagConstraints.FIRST_LINE_END;
@@ -77,6 +96,8 @@ public class MinesweeperGame extends JFrame {
 		c.gridy = 0;
 		button = new JButton("Random");
 		button.addActionListener(new RandomReveal(this));
+		button.setBackground(Color.RED);
+		button.setFont(new Font("Verdana", Font.PLAIN, 12));
 		buttonsPanel.add(button, c);
 		
 		add(buttonsPanel, BorderLayout.NORTH);
@@ -86,12 +107,18 @@ public class MinesweeperGame extends JFrame {
 		labelPanel = new JPanel(new BorderLayout());
 		
 		timeBar = new JLabel();
+		timeBar.setForeground(Color.BLACK);
+		timeBar.setFont(new Font("Verdana", Font.PLAIN, 12));
 		labelPanel.add(timeBar,BorderLayout.NORTH);
 		
 		radarBar = new JLabel("Radars left: 3");
+		radarBar.setForeground(Color.BLUE);
+		radarBar.setFont(new Font("Verdana", Font.PLAIN, 12));
 		labelPanel.add(radarBar,BorderLayout.CENTER);
 		
 		statusBar = new JLabel("");
+		statusBar.setForeground(Color.RED);
+		statusBar.setFont(new Font("Verdana", Font.PLAIN, 12));
 		labelPanel.add(statusBar, BorderLayout.SOUTH);
         
         add(labelPanel,BorderLayout.SOUTH);
@@ -141,8 +168,6 @@ public class MinesweeperGame extends JFrame {
 		setResizable(false);
 	}
 
-	
-	//jaxb
 	public static void main(String[] args) {
 
         EventQueue.invokeLater(() -> {

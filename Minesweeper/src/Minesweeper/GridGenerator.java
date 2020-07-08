@@ -42,7 +42,7 @@ public class GridGenerator extends JPanel{
         }
 	}
 	
-	public void generateMines(){
+	public void generateMines(){//test
 		inGame = true;
 		won = false;
 		minesLeft = 0;
