@@ -9,13 +9,17 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class AudioManager {
+	
 	private Clip revealSound, markSound, winSound, bombSound, sonarSound, tickingSound, buttonSound, shuffleSound;
 	private AudioInputStream sound;
 	private Boolean isAudio;
+	
 	AudioManager(){
-		isAudio = true;
+		isAudio = true;//sets audio on
 		InitAudio();
 	}
+	
+	//gets audio clips from files
 	private void InitAudio() {
 		try {
 			sound = AudioSystem.getAudioInputStream(new File("src/resources/Woosh.wav"));
@@ -54,58 +58,68 @@ public class AudioManager {
 			e.printStackTrace();
 		}
 	}
+	//plays when revealing a field
 	public void playReveal() {
 		if(!isAudio)
 			return;
 		revealSound.setFramePosition(0);
 		revealSound.start();
 	}
+	//plays when revealing a mine
 	public void playBomb() {
 		if(!isAudio)
 			return;
 		bombSound.setFramePosition(0);
 		bombSound.start();
 	}
+	//plays when winning the game
 	public void playWin() {
 		if(!isAudio)
 			return;
 		winSound.setFramePosition(0);
 		winSound.start();
 	}
+	//plays when there are 5 seconds left before shuffling
 	public void playTick() {
 		if(!isAudio)
 			return;
 		tickingSound.setFramePosition(0);
 		tickingSound.start();
 	}
+	//plays when setting a flag
 	public void playMark() {
 		if(!isAudio)
 			return;
 		markSound.setFramePosition(0);
 		markSound.start();
 	}
+	//plays when using the radar
 	public void playSonar() {
 		if(!isAudio)
 			return;
 		sonarSound.setFramePosition(0);
 		sonarSound.start();
 	}
+	//plays when pressing any button
 	public void playButton() {
 		if(!isAudio)
 			return;
 		buttonSound.setFramePosition(0);
 		buttonSound.start();
 	}
+	//plays when shuffling
 	public void playShuffle() {
 		if(!isAudio)
 			return;
 		shuffleSound.setFramePosition(0);
 		shuffleSound.start();
 	}
+	//toggles audio
 	public void setAudio() {
 		isAudio = !isAudio;
 	}
 }
+//listener for audio button
 class ToggleAudio implements ActionListener{
 	MinesweeperGame minesweeperGame;
 	ToggleAudio(MinesweeperGame m){

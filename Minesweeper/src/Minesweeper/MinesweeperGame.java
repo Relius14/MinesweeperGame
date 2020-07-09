@@ -54,7 +54,7 @@ public class MinesweeperGame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-	
+	//sets the UI for the main game panel
 	private void setGamePanel() {
 		audioManager = new AudioManager();
 		timeManager = new TimeManager(timeBar, audioManager);
@@ -65,7 +65,7 @@ public class MinesweeperGame extends JFrame {
 		gamePanel.add(gameType,BorderLayout.CENTER);
 		add(gameType);
 	}
-
+	//sets the UI panel for buttons
 	private void setButtonsPanel() {
 		buttonsPanel =  new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -102,7 +102,7 @@ public class MinesweeperGame extends JFrame {
 		
 		add(buttonsPanel, BorderLayout.NORTH);
 	}
-
+	//sets the UI panel for timer, radars and flags labels
 	private void setLabelPanel() {
 		labelPanel = new JPanel(new BorderLayout());
 		
@@ -123,7 +123,7 @@ public class MinesweeperGame extends JFrame {
         
         add(labelPanel,BorderLayout.SOUTH);
 	}
-	
+	//sets the UI menu bar for difficulty settings
 	private void setMenuBar() {
 		 	menuBar = new JMenuBar();
 		 	setJMenuBar(menuBar);
@@ -151,12 +151,16 @@ public class MinesweeperGame extends JFrame {
 	protected GameFeatures getGameType() {
 		return gameType;
 	}
+	
 	protected void toggleAudio() {
 		audioManager.setAudio();
 	}
+	
 	protected void audioButtons() {
 		audioManager.playButton();
 	}
+	
+	//changes the game type and resets the game
 	protected void resetGameType(GameType newType) {
 		setResizable(true);
 		remove(gameType);

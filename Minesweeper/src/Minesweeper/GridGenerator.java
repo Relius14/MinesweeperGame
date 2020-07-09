@@ -33,6 +33,7 @@ public class GridGenerator extends JPanel{
 		generateMines();
 	}
 	
+	//sets dimensions of the grid and gets images from files
 	private void InitUI(){
 		setPreferredSize(new Dimension(IMAGE_SIZE * gridSize + 1, IMAGE_SIZE * gridSize + 1));
 		img = new Image[NO_IMAGES];
@@ -42,7 +43,8 @@ public class GridGenerator extends JPanel{
         }
 	}
 	
-	public void generateMines(){//test
+	//generates the mines for a new game and initializes the labels
+	protected void generateMines(){
 		inGame = true;
 		won = false;
 		minesLeft = 0;
@@ -70,7 +72,8 @@ public class GridGenerator extends JPanel{
 		repaint();
 	}
 	
-	public void addNeighbors(int row, int col){
+	//adds value to hints for fields adjacent to mines
+	protected void addNeighbors(int row, int col){
 		for(int i = -1; i < 2; ++i) {
 			for(int j = -1; j < 2; ++j) {
 				if(row + i >= 0 && col + j >= 0 && row + i < gridSize && col + j < gridSize) {
@@ -79,7 +82,7 @@ public class GridGenerator extends JPanel{
 			}
 		}
 	}
-	
+	//recursively reveals all fields adjacent to the empty cell revealed
 	protected void findEmptyCell(int row, int col) {
 		for(int i = -1; i < 2; ++i) {
 			for(int j = -1; j < 2; ++j) {
@@ -99,6 +102,7 @@ public class GridGenerator extends JPanel{
 		}
 	}
 	
+	//used to repaint the UI for the fields at every change
 	public void paintComponent(Graphics g) {
 		int toUncover = 0;
 		for(int row = 0; row < gridSize; ++row) {

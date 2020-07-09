@@ -10,10 +10,13 @@ import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class GameFeatures extends GridGenerator{
+	
 	public GameFeatures(int gridSize, int noMines, JLabel statusBar, TimeManager time, JLabel radarBar, AudioManager audio) {
 		super(gridSize, noMines, statusBar, radarBar, time, audio);
 		addMouseListener(new MinesAdapter());
 	}
+	
+	//randomly checks an uncovered field
 	public void randomCheck() {
 		int col, row;
 		if(!inGame) {
@@ -39,6 +42,7 @@ public class GameFeatures extends GridGenerator{
 		repaint();
 	}
 	
+	//shuffles all the fields
 	public void shuffle() {
 		audio.playShuffle();
 		int row1, row2, col1, col2;
@@ -75,6 +79,8 @@ public class GameFeatures extends GridGenerator{
 		}
 		repaint();
 	}
+	
+	//used to mark or unmark a field with flag
 	private void toMark(int row, int col) {
 		if(matrix[row][col].isFlag()){
 			++minesLeft;
@@ -94,6 +100,8 @@ public class GameFeatures extends GridGenerator{
 				statusBar.setText("No flags left!");
 			}
 	}
+	
+	//reveals a field
 	private void toReveal(int row, int col) {
 		matrix[row][col].reveal();
 		if(matrix[row][col].isMine()) {
@@ -108,6 +116,7 @@ public class GameFeatures extends GridGenerator{
 		}
 	}
 	
+	//detects mines on a surface up to 3x3 fields
 	private void toSearch(int row, int col) {
 		audio.playSonar();
 		if(matrix[row][col].isMine()) {
@@ -135,6 +144,7 @@ public class GameFeatures extends GridGenerator{
 		radarBar.setText("Radars left: " + Integer.toString(radarsLeft));
 	}
 	
+	//adds functionality to the mouse buttons
 	public class MinesAdapter extends MouseAdapter{
 		
 		public void mousePressed(MouseEvent e) {
@@ -169,6 +179,7 @@ public class GameFeatures extends GridGenerator{
 		}
 	}
 }
+//listener for random reveal button
 class RandomReveal implements ActionListener{
 	MinesweeperGame game;
 	RandomReveal(MinesweeperGame game){
